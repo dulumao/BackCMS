@@ -1,0 +1,1 @@
+{{ $attach->default }} <input type="checkbox" name="{{ $label }}" value="1" {{ isset( $value ) && $value == 1 ? 'checked="checked"' : null }}>

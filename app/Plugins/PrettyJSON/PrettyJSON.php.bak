@@ -1,0 +1,101 @@
+<?php
+namespace App\Plugins\PrettyJSON;
+
+class PrettyJSON
+{
+    private $data = [ ];
+
+    public function run($json)
+    {
+        $this->data = json_decode( $json, true, 1024 );
+
+        if ( is_array( $this->data ) ) {
+            return static::printHtml( $this->data );
+        } else {
+            return static::renderSimpleValue( $this->data );
+        }
+    }
+
+    private static function printHtml( $data, $headerKey = null, $isEndComma = false )
+    {
+        if ( is_null( $data ) ) {
+            return static::renderSimpleValue( $data );
+        }
+
+        $html    = '<div style="font-family: \'droid sans mono\', consolas, monospace, \'courier new\', courier, sans-serif, monospace;white-space: pre;">';
+        $isAssoc = static::isAssoc( $data );
+        $keyHtml = null;
+
+        if ( $headerKey ) {
+            $keyHtml = '<span style="color:#404040;">"' . $headerKey . '"</span>';
+            $keyHtml .= '<span style="color:#A1A1A1;">:&nbsp;</span>';
+        }
+
+        $html .= '<div style="color:#A1A1A1;">' . $keyHtml . ( $isAssoc ? '{' : '[' ) . '</div>';
+        $html .= '<div style="padding-left:20px;">';
+
+        $count     = count( $data );
+        $iteration = 0;
+
+        foreach ( $data as $key => $value ) {
+            $isComma = $iteration++ < $count - 1;
+
+            if ( is_array( $value ) ) {
+                $html .= static::printHtml( $value, $isAssoc ? $key : null, $isComma );
+            } else {
+                $html .= '<div>';
+
+                if ( $isAssoc ) {
+                    $html .= '<span style="color: #404040;">' . $key . '</span>';
+                    $html .= '<span style="color:#A1A1A1;">:&nbsp;</span>';
+                }
+
+                $html .= static::renderSimpleValue( $value );
+
+                if ( $isComma ) {
+                    $html .= '<span style="color:#A1A1A1;">,</span>';
+                }
+
+                $html .= '</div>';
+            }
+        }
+
+        $html .= '</div>';
+        $html .= '<div style="color:#A1A1A1;">' . ( $isAssoc ? '}' : ']' ) . ( $isEndComma ? ',' : '' ) . '</div>';
+        $html .= '</div>';
+
+        return $html;
+    }
+
+    private static function renderSimpleValue( $value )
+    {
+        $type   = gettype( $value );
+        $return = null;
+
+        switch ( $type ) {
+            case 'string':
+                $return = '<span style="color: #45A139;">' . $value . '</span>';
+                break;
+            case 'number':
+            case 'integer':
+            case 'double':
+                $return = '<span style="color: #FF6F6F">' . $value . '</span>';
+                break;
+            case 'boolean':
+                $str    = [ true => 'true', false => 'false' ];
+                $return = '<span style="color: #FFA32D;">' . $str[ $value ] . '</span>';
+                break;
+            default:
+                $return = '<span>' . $value . ' (' . $type . ')</span>';
+                break;
+        }
+
+        return $return;
+    }
+
+    private static function isAssoc( $arr )
+    {
+        return array_keys( $arr ) !== range( 0, count( $arr ) - 1 );
+    }
+
+}
