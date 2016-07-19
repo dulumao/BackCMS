@@ -15,7 +15,7 @@ class Templates extends Migration
         Schema::create( 'templates', function ( Blueprint $table ) {
             $table->increments( 'id' );
             $table->string( 'name', 255 );
-            $table->text( 'code' );
+            $table->longText( 'code' );
             $table->integer( 'type' )->comment( '模版类型' );
             $table->integer( 'system' )->comment( '系统模版' );
             $table->timestamps();

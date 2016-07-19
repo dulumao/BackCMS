@@ -20,7 +20,6 @@ class CreateUsersTable extends Migration
             $table->string( 'password', 255 );
             $table->string( 'avatar', 255 );
             $table->string( 'nickname', 20 );
-            $table->integer( 'admin_permission_role_id' );
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
