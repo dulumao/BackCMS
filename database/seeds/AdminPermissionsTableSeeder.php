@@ -57,6 +57,7 @@ class AdminPermissionsTableSeeder extends Seeder
             [ 'name' => 'Manager.Delete.File', 'label' => '删除文件' ],
             [ 'name' => 'Manager.File', 'label' => '上传文件' ],
             [ 'name' => 'Manager.Avatar', 'label' => '上传头像' ],
+            [ 'name' => 'Manager.Image', 'label' => '上传图片' ],
         ] );
 
 
