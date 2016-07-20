@@ -210,7 +210,7 @@
                         </div>
 
                         <div class="uk-margin-top">
-                            {!! \Plugins::call('pagination')->simpleCreate($archives)->render() !!}
+                            {!! \Plugins::call('Pagination')->simpleCreate($archives)->render() !!}
                         </div>
                     </div>
 

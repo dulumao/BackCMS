@@ -41,7 +41,7 @@ function select( $type, $name, $limit = null, $not = false )
             $archiveFields = $archiveFields->first()->getArchive;
         } else {
             if ( !$not )
-                $archiveFields = \App\Models\ArchiveField::where( 'name', '!=', $name )->first()->getArchive;
+                $archiveFields = \App\Models\ArchiveField::where( 'name', '=', $name )->first()->getArchive;
             else
                 $archiveFields = \App\Models\ArchiveField::where( 'name', '!=', $name )->first()->getArchive;
         }
