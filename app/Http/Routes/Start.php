@@ -6,6 +6,8 @@ if ( env( 'APP_ENV' ) === 'local' ) {
     Artisan::call( 'view:clear' );
 }
 
+require('MultiLanguage.php');
+
 Route::group( [
     'prefix'    => Config()->get( 'route.admin.prefix' ),
     'namespace' => Config()->get( 'route.admin.namespace' ),

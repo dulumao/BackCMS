@@ -165,6 +165,10 @@ function configures( $type = 'all', $names = null )
     return $configures;
 }
 
+function languages() {
+    return \Symfony\Component\Yaml\Yaml::parse( \App\Models\Language::first()->language );
+}
+
 function loopArray( $str, $delimiter = '|' )
 {
     return explode( $delimiter, $str );
@@ -175,6 +179,11 @@ function subField( $collection, $field )
     $fields = json_decode( $collection->$field );
 
     return $fields;
+}
+
+function lang( $str )
+{
+    return app( 'multi.language' )->get( $str );
 }
 
 function version()

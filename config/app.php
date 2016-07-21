@@ -162,6 +162,7 @@ return [
         App\Providers\BootServiceProvider::class,
         App\Providers\BladeServiceProvider::class,
         App\Providers\PluginsServiceProvider::class,
+        App\Providers\MultiLanguageServiceProvider::class,
 
     ],
 

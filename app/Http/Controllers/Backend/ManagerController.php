@@ -16,6 +16,7 @@ class ManagerController extends BackendController
 
     public function postRoot( BackendRequest $request )
     {
+        abort(403);
         $this->permission();
 
         $root     = $request->input( 'root' );
