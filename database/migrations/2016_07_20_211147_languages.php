@@ -14,7 +14,7 @@ class Languages extends Migration
     {
         Schema::create( 'languages', function ( Blueprint $table ) {
             $table->increments( 'id' );
-            $table->longText( 'language' );
+            $table->longText( 'value' );
         } );
     }
 
