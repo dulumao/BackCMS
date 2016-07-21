@@ -165,8 +165,15 @@ function configures( $type = 'all', $names = null )
     return $configures;
 }
 
-function languages() {
-    return \Symfony\Component\Yaml\Yaml::parse( \App\Models\Language::first()->language );
+function languages()
+{
+    try {
+        $language = \Symfony\Component\Yaml\Yaml::parse( \App\Models\Language::first()->value );
+    } catch ( Exception $e ) {
+        return null;
+    }
+
+    return $language;
 }
 
 function loopArray( $str, $delimiter = '|' )
