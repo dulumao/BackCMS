@@ -14,6 +14,8 @@ class Localization
                 return $this->setLocalization( 'zh-cn' );
             case 'zh-tw':
                 return $this->setLocalization( 'zh-tw' );
+            case 'en':
+                return $this->setLocalization( 'en' );
         }
 
         abort( 404 );
@@ -24,6 +26,6 @@ class Localization
         app()->setLocale( $language );
         Cookie()->queue( Cookie()->forever( 'language', $language ) );
 
-        return Redirect::back();
+        return Redirect()->back();
     }
 }
