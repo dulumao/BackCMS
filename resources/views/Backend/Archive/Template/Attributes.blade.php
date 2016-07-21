@@ -49,7 +49,7 @@
                         {{--<option value="2">布尔</option>--}}
                         <option value="html">Html</option>
                         <option value="markdown">Markdown</option>
-                        {{--<option value="boolean">布尔</option>--}}
+                        <option value="boolean">布尔</option>
                         <option value="select">多选</option>
                         <option value="datetime">日期</option>
                         <option value="time">时间</option>

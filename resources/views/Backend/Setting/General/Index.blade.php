@@ -9,6 +9,11 @@
     <script src="{{ asset('statics/js/app.base.js') }}" type="text/javascript"></script>
     <link href="{{ asset('statics/css/app.base.css') }}" type="text/css" rel="stylesheet"/>
 
+    <link href="{{  asset('assets/vendor/codemirror/codemirror.css') }}" type="text/css" rel="stylesheet"/>
+    <link href="{{  asset('assets/vendor/codemirror/codemirror.css') }}" type="text/css" rel="stylesheet"/>
+    <script src="{{ asset('assets/vendor/codemirror/codemirror.js') }}" type="text/javascript"></script>
+    <link href="//cdn.bootcss.com/codemirror/5.15.2/theme/neo.min.css" rel="stylesheet">
+
     <script src="//cdn.bootcss.com/vue/1.0.24/vue.js"></script>
     <script src="//cdn.bootcss.com/vue-resource/0.7.2/vue-resource.min.js"></script>
 </head>
@@ -18,13 +23,14 @@
     <div class="app-wrapper">
 
 
-        <h1><a href="/settingspage">设置</a> / 常规</h1>
+        <h1><a href="{{ Action('Backend\SettingController@getIndex') }}">设置</a> / 常规</h1>
 
         <div class="uk-grid" data-uk-grid-margin data-ng-controller="general-settings">
 
             <div class="uk-width-medium-1-4">
                 <ul class="uk-nav uk-nav-side" data-uk-switcher="{connect:'#settings-general'}">
-                    <li><a href="#LOCALES">系统变量</a></li>
+                    <li><a>系统变量</a></li>
+                    <li><a>多语言</a></li>
                     {{--  <li><a href="#REGISTRY">第三方接口</a></li>
                       <li><a href="#SYSTEM">导出接口</a></li>--}}
                 </ul>
@@ -99,6 +105,18 @@
                                 <highlightcode>var value = Cockpit.registry.keyname || default; // with Cockpit.js API</highlightcode>
                             </div>--}}
                         </div>
+
+                        <div>
+                            <span class="uk-badge app-badge">多语言</span>
+                            <hr>
+                                <div class="uk-margin uk-form" ng-if="token">
+                                    <label class="uk-badge uk-margin-small-bottom">格式为Yaml文档</label>
+                                    <textarea v-model="form.language" class="uk-width-1-1" style="min-height:300px;">{{ $language->value }}</textarea>
+                                </div>
+
+                            <button class="uk-button uk-button-large uk-button-success" type="button" @click="save" :disabled="disabled">保存</button>
+                        </div>
+
                         {{--<div>
                             <span class="uk-badge app-badge">第三方接口</span>
                             <hr>
@@ -198,6 +216,7 @@
             @foreach( $configures as $configure )
                 {{ $configure->key }}: null,
             @endforeach
+                language: null
             }
         },
         methods: {
@@ -207,6 +226,7 @@
                         @foreach( $configures as $configure )
                         {{ $configure->key }}: this.form.{{ $configure->key }},
                         @endforeach
+                        language: this.form.language,
                         _token: '{{ csrf_token() }}'
                     },
                     'method': 'post'

@@ -19,9 +19,11 @@ class SettingController extends BackendController
         $this->permission();
 
         $configures = \App\Models\Configure::all();
+        $language   = \App\Models\Language::first();
 
         return View( 'Backend.Setting.General.Index' )->with( [
-            'configures' => $configures
+            'configures' => $configures,
+            'language'   => $language
         ] );
     }
 
@@ -34,11 +36,17 @@ class SettingController extends BackendController
 
         foreach ( $inputs as $key => $value ) {
             $configure        = \App\Models\Configure::whereKey( $key )->first();
-            $configure->value = $value;
-            $returns          = $configure->save();
+
+            if ( $configure ) {
+                $configure->value = $value;
+                $returns          = $configure->save();
+            }
         }
 
-        if ( $returns )
+        $language = \App\Models\Language::first();
+        $language->value = $inputs['language'];
+
+        if ( $returns && $language->save() )
             return Response()->json( [
                 'code' => 'success',
             ] );
