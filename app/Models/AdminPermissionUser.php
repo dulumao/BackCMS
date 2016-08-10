@@ -13,6 +13,6 @@ class AdminPermissionUser extends Model
 
     public function getAdminPermissionRole()
     {
-        return $this->belongsTo( '\App\Models\AdminPermission', 'admin_permission_role_id' );
+        return $this->belongsTo( '\App\Models\AdminPermissionRole', 'admin_permission_role_id' );
     }
 }
