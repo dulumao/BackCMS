@@ -111,7 +111,7 @@
                             <hr>
                                 <div class="uk-margin uk-form" ng-if="token">
                                     <label class="uk-badge uk-margin-small-bottom">格式为Yaml文档</label>
-                                    <textarea v-model="form.language" class="uk-width-1-1" style="min-height:300px;">{{ $language->value }}</textarea>
+                                    <textarea v-model="form.language" class="uk-width-1-1" style="min-height:300px;">{{ $language->value or null }}</textarea>
                                 </div>
 
                             <button class="uk-button uk-button-large uk-button-success" type="button" @click="save" :disabled="disabled">保存</button>
