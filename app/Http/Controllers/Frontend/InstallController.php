@@ -43,6 +43,8 @@ class InstallController extends Controller
             \Schema::dropIfExists( 'pages' );
             \Schema::dropIfExists( 'templates' );
             \Schema::dropIfExists( 'migrations' );
+            \Schema::dropIfExists( 'form_fields' );
+            \Schema::dropIfExists( 'languages' );
 
             \Storage::delete( 'installed' );
 
