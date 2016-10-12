@@ -103,18 +103,33 @@
                         </ul>
 
                         <ul id="groups-list" class="uk-nav uk-nav-side uk-animation-fade uk-sortable" data-uk-sortable>
-                            @foreach( $archiveFields as $field )
-                                <li draggable="true">
-                                    <a><i class="uk-icon-bars" style="cursor:move;"></i> {{ $field->name }}</a>
-                                    <ul class="uk-subnav group-actions uk-animation-slide-right">
-                                        <li><a href="{{ Action('Backend\ArchiveController@getList',$field->id) }}"><i
-                                                        class="uk-icon-ellipsis-h"></i></a></li>
-                                        <li><a href="{{ Action('Frontend\ArchiveController@getList',$field->id) }}"><i
-                                                        class="uk-icon-eye"></i></a></li>
-                                        <li><a href="#" @click="deleteField({{ $field->id }},$event)"><i
-                                                    class="uk-icon-trash-o"></i></a></li>
-                                    </ul>
-                                </li>
+
+                        @foreach( $archiveFields as $field )
+                            {!! loopArchiveFields($field) !!}
+
+                                {{--{{ loopArchiveFields($field) }}--}}
+                                {{--<li draggable="true">--}}
+                                    {{--<a><i class="uk-icon-bars" style="cursor:move;"></i> {{ $field['name'] }}</a>--}}
+                                    {{--<ul class="uk-subnav group-actions uk-animation-slide-right">--}}
+                                        {{--<li><a href="{{ Action('Backend\ArchiveController@getList',$field['id']) }}"><i class="uk-icon-ellipsis-h"></i></a></li>--}}
+                                        {{--<li><a href="{{ Action('Frontend\ArchiveController@getList',$field['id']) }}"><i class="uk-icon-eye"></i></a></li>--}}
+                                        {{--<li><a href="#" @click="deleteField({{ $field['id'] }},$event)"><i class="uk-icon-trash-o"></i></a></li>--}}
+                                    {{--</ul>--}}
+                                {{--</li>--}}
+
+                                {{--@if(isset($field['children']))--}}
+                                    {{--@foreach($field['children'] as $child)--}}
+                                    {{--<li draggable="true">--}}
+                                        {{--<a>&nbsp; &nbsp; &nbsp; {{ $child['name'] }}</a>--}}
+                                        {{--<ul class="uk-subnav group-actions uk-animation-slide-right">--}}
+                                            {{--<li><a href="{{ Action('Backend\ArchiveController@getList',$child['id']) }}"><i class="uk-icon-ellipsis-h"></i></a></li>--}}
+                                            {{--<li><a href="{{ Action('Frontend\ArchiveController@getList',$child['id']) }}"><i class="uk-icon-eye"></i></a></li>--}}
+                                            {{--<li><a href="#" @click="deleteField({{ $child['id'] }},$event)"><i class="uk-icon-trash-o"></i></a></li>--}}
+                                        {{--</ul>--}}
+                                    {{--</li>--}}
+                                    {{--@endforeach--}}
+                                {{--@endif--}}
+
                             @endforeach
                         </ul>
                     </div>
@@ -163,7 +178,8 @@
                         <table class="uk-table uk-table-striped">
                             <thead>
                             <tr>
-                                <th width="10"><input class="js-select-all" type="checkbox" @click="selectAll" v-model="allSelected"></th>
+                                <th width="10"><input class="js-select-all" type="checkbox" @click="selectAll" v-model="
+                                    allSelected"></th>
                                 <th width="50%">标题</th>
                                 <th width="20%">创建时间</th>
                                 <th width="20%">修改时间</th>
@@ -173,7 +189,8 @@
                             <tbody>
                             @foreach( $archives as $archive )
                                 <tr class="js-multiple-select">
-                                    <td><input class="js-select" type="checkbox" v-model="ids" @click="select" value="{{ $archive->id }}"></td>
+                                    <td><input class="js-select" type="checkbox" v-model="ids" @click="select" value=
+                                        "{{ $archive->id }}"></td>
                                     <td>
                                         <a href="{{ Action('Backend\ArchiveController@getEdit',$archive->id) }}">{{ $archive->title }}</a>
                                     </td>
@@ -206,7 +223,8 @@
                         </table>
 
                         <div class="uk-margin-top" v-if="ids.length > 0">
-                            <button class="uk-button uk-button-danger" @click="deleteAll"><i class="uk-icon-trash-o"></i> 批量删除</button>
+                            <button class="uk-button uk-button-danger" @click="deleteAll"><i
+                                    class="uk-icon-trash-o"></i> 批量删除</button>
                         </div>
 
                         <div class="uk-margin-top">
@@ -322,7 +340,7 @@
                         });
                     }
                 },
-                deleteAll:function(){
+                deleteAll: function () {
                     if (confirm('确定删除嘛?')) {
                         this.$http({
                             url: '{{ Action('Backend\ArchiveController@postDelete') }}',

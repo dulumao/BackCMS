@@ -66,11 +66,20 @@
                     </div>
                     <div class="uk-width-1-4">
                         <div class="uk-margin">
+                            <p>父分类</p>
+                            <select class="uk-width-1-1 uk-margin-bottom" name="parent_id">
+                                <option value="0">{{ '无' }}</option>
+                                @foreach( $parents as $parent )
+                                    <option value="{{ $parent->id }}">{{ $parent->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="uk-margin">
                             <p>列表模版</p>
                             <select class="uk-width-1-1 uk-margin-bottom" name="list_template">
-                            @foreach( $templates as $template )
-                            <option value="{{ $template->id }}" {{ $template->name == '文章列表' ? 'selected' : null }}>{{ $template->name }}</option>
-                            @endforeach
+                                @foreach( $templates as $template )
+                                    <option value="{{ $template->id }}" {{ $template->name == '文章列表' ? 'selected' : null }} >{{ $template->name }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="uk-margin">

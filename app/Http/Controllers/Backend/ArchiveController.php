@@ -24,6 +24,20 @@ class ArchiveController extends BackendController
 
         $archives = \App\Models\Archive::whereIn( 'archive_field_id', $fieldIds )->simplePaginate( 20 );
 
+        // 构造无限极分类 begin
+        $items = $archiveFields->toArray();
+
+        array_unshift($items, '');      // 下方的 foreach 只能处理 下标由1开始的数组(下标与行id对应)
+        unset($items[0]);               // 因此暂时使用这种方式处理
+
+        foreach ($items as $item)
+            $items[$item['pid']]['children'][] = &$items[$item['id']];
+        $archiveFields = isset($items[0]['children']) ? $items[0]['children'] : array();
+
+        // 构造无限极分类 end
+
+//        array_multisort($archiveFields);
+//        return $archiveFields;
         return View( 'Backend.Archive.Index' )->with( [
             'archiveFields' => $archiveFields,
             'archives'      => $archives
@@ -36,8 +50,11 @@ class ArchiveController extends BackendController
 
         $templates = \App\Models\Template::whereType( 2 )->get();
 
+        $parents = \App\Models\ArchiveField::select(['id', 'pid', 'field', 'name'])->get();
+
         return View( 'Backend.Archive.Create' )->with( [
-            'templates' => $templates
+            'templates' => $templates,
+            'parents'   => $parents
         ] );
     }
 
@@ -56,6 +73,7 @@ class ArchiveController extends BackendController
         $attributeTemplate  = isset( $inputs[ 'attributeTemplate' ] ) ? $inputs[ 'attributeTemplate' ] : null;
         $listTemplate       = $inputs[ 'list_template' ];
         $showTemplate       = $inputs[ 'show_template' ];
+        $parentId           = $inputs[ 'parent_id' ];
 
         $fields = [ ];
 
@@ -86,11 +104,17 @@ class ArchiveController extends BackendController
                 ] );
             }
         }
+
+
+        $deepth = ($parentId == 0) ? 0 : \App\Models\ArchiveField::whereId($parentId)->value('deepth') + 1;
+
         $archiveField                = new \App\Models\ArchiveField;
         $archiveField->name          = $archiveNames;
         $archiveField->field         = json_encode( $fields );
         $archiveField->list_template = $listTemplate;
         $archiveField->show_template = $showTemplate;
+        $archiveField->pid           = $parentId;
+        $archiveField->deepth        = $deepth;
 
         if ( $archiveField->save() )
             return Response()->json( [

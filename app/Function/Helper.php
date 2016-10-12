@@ -9,10 +9,12 @@ function compileBlade( $sourceCode, $args = null, $compile = 1 )
     $phpString      = $blade->compileString( $templateString );
 
     if ( $compile ) {
-        if ( !is_null( $args ) ) extract( $args, EXTR_SKIP );
+        if ( !is_null( $args ) ) {
+            extract( $args, EXTR_SKIP );
+        }
 
         ob_start();
-        eval( '?> ' . $phpString . ' <?php ' );
+        eval('?> ' . $phpString . ' <?php ');
         $outHtml = ob_get_clean();
 
         return $outHtml;
@@ -24,7 +26,7 @@ function compileBlade( $sourceCode, $args = null, $compile = 1 )
 function select( $type, $name, $limit = null, $not = false )
 {
     $datas  = null;
-    $select = [ ];
+    $select = [];
 
     $type = strtolower( $type );
 
@@ -32,18 +34,20 @@ function select( $type, $name, $limit = null, $not = false )
         if ( is_array( $name ) ) {
             $archiveFields = new \App\Models\ArchiveField;
             foreach ( $name as $where ) {
-                if ( !$not )
+                if ( !$not ) {
                     $archiveFields = $archiveFields->whereName( $where );
-                else
+                } else {
                     $archiveFields = $archiveFields->where( 'name', '!=', $where );
+                }
             }
 
             $archiveFields = $archiveFields->first()->getArchive;
         } else {
-            if ( !$not )
+            if ( !$not ) {
                 $archiveFields = \App\Models\ArchiveField::where( 'name', '=', $name )->first()->getArchive;
-            else
+            } else {
                 $archiveFields = \App\Models\ArchiveField::where( 'name', '!=', $name )->first()->getArchive;
+            }
         }
 
         if ( !is_null( $limit ) ) {
@@ -51,16 +55,16 @@ function select( $type, $name, $limit = null, $not = false )
         }
 
         foreach ( $archiveFields as $key => $data ) {
-            $select[ $key ][ 'id' ]          = $data->id;
-            $select[ $key ][ 'title' ]       = $data->title;
-            $select[ $key ][ 'keywords' ]    = $data->keywords;
-            $select[ $key ][ 'description' ] = $data->description;
-            $select[ $key ][ 'enabled' ]     = $data->enabled;
-            $select[ $key ][ 'created_at' ]  = $data->created_at;
-            $select[ $key ][ 'updated_at' ]  = $data->updated_at;
+            $select[$key]['id']          = $data->id;
+            $select[$key]['title']       = $data->title;
+            $select[$key]['keywords']    = $data->keywords;
+            $select[$key]['description'] = $data->description;
+            $select[$key]['enabled']     = $data->enabled;
+            $select[$key]['created_at']  = $data->created_at;
+            $select[$key]['updated_at']  = $data->updated_at;
 
             foreach ( json_decode( $data->body, true ) as $field => $value ) {
-                $select[ $key ][ $field ] = $value;
+                $select[$key][$field] = $value;
             }
         }
     }
@@ -108,18 +112,20 @@ function category( $type, $name, $limit = null, $not = false )
         if ( is_array( $name ) ) {
             $archiveField = new \App\Models\ArchiveField;
             foreach ( $name as $where ) {
-                if ( !$not )
+                if ( !$not ) {
                     $archiveField = $archiveField->whereName( $where );
-                else
+                } else {
                     $archiveField = $archiveField->where( 'name', '!=', $where );
+                }
             }
 
             $archiveField = $archiveField->get();
         } else {
-            if ( !$not )
+            if ( !$not ) {
                 $archiveField = \App\Models\ArchiveField::where( 'name', '!=', $name )->get();
-            else
+            } else {
                 $archiveField = \App\Models\ArchiveField::where( 'name', '!=', $name )->get();
+            }
         }
 
         if ( !is_null( $limit ) ) {
@@ -135,7 +141,7 @@ function breadcrumb()
     $home         = '<li><a href="/">首页</a></li>';
     $brehwadcrumb = null;
 
-    list( $controller, $action ) = Request()->segments();
+    list($controller, $action) = Request()->segments();
 
     $breadcrumb = $home . $brehwadcrumb;
 
@@ -146,12 +152,14 @@ function configures( $type = 'all', $names = null )
 {
     $configures = new \App\Models\Configure;
 
-    $configures = $configures->select( [ 'key', 'value', 'name' ] );
+    $configures = $configures->select( ['key', 'value', 'name'] );
 
     if ( $type == 'system' ) {
         $configures = $configures->whereType( 1 );
-    } else if ( $type == 'user' ) {
-        $configures = $configures->whereType( 0 );
+    } else {
+        if ( $type == 'user' ) {
+            $configures = $configures->whereType( 0 );
+        }
     }
 
     if ( !is_null( $names ) && is_array( $names ) ) {
@@ -201,4 +209,34 @@ function version()
 function helloWorld()
 {
     return 'Hello World';
+}
+
+
+function loopArchiveFields( $array, &$li = null )
+{
+    $getBackendList  = Action( 'Backend\ArchiveController@getList', $array['id'] );
+    $getFrontendList = Action( 'Frontend\ArchiveController@getList', $array['id'] );
+
+    if ( isset($array['children']) ) {
+        $li .= sprintf( "<li draggable='true' style='padding-left: %spx'>", $array['deepth'] * 15 );
+        $li .= sprintf( "<a> %s</a>", $array['name'] );
+        $li .= sprintf( "<ul class='uk-subnav group-actions uk-animation-slide-right'>" );
+        $li .= sprintf( "<li><a href={$getBackendList}><i class='uk-icon-ellipsis-h'></i></a></li>" );
+        $li .= sprintf( "<li><a href={$getFrontendList}><i class='uk-icon-eye'></i></a></li>" );
+        $li .= sprintf( "</ul>" );
+        $li .= sprintf( "</li>" );
+        foreach ( $array['children'] as $children ) {
+            loopArchiveFields( $children, $li );
+        }
+    } elseif ( is_array( $array ) ) {
+        $li .= sprintf( "<li draggable='true' style='padding-left: %spx'>", $array['deepth'] * 15 );
+        $li .= sprintf( "<a> %s</a>", $array['name'] );
+        $li .= sprintf( "<ul class='uk-subnav group-actions uk-animation-slide-right'>" );
+        $li .= sprintf( "<li><a href={$getBackendList}><i class='uk-icon-ellipsis-h'></i></a></li>" );
+        $li .= sprintf( "<li><a href={$getFrontendList}><i class='uk-icon-eye'></i></a></li>" );
+        $li .= sprintf( "</ul>" );
+        $li .= sprintf( "</li>" );
+    }
+
+    return $li;
 }
