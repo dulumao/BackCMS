@@ -15,7 +15,7 @@ class Pages extends Migration
         Schema::create( 'pages', function ( Blueprint $table ) {
             $table->increments( 'id' );
             $table->string( 'title', 255 );
-            $table->text( 'body' );
+            $table->longText( 'body' );
             $table->integer( 'type' )->comment( '类型' );
             $table->integer( 'status' )->comment( '状态' );
             $table->integer( 'engine' )->comment( '解析引擎' );

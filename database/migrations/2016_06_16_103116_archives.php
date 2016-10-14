@@ -17,7 +17,7 @@ class Archives extends Migration
             $table->string( 'title', 255 );
             $table->string( 'keywords', 255 );
             $table->string( 'description', 255 );
-            $table->text( 'body' );
+            $table->longText( 'body' );
             $table->integer( 'enabled' );
             $table->integer( 'archive_field_id' )->comment( '文章组件字段' );
             $table->timestamps();

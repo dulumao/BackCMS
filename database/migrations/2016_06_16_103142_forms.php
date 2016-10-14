@@ -14,7 +14,7 @@ class Forms extends Migration
     {
         Schema::create( 'forms', function ( Blueprint $table ) {
             $table->increments( 'id' );
-            $table->text( 'body' );
+            $table->longText( 'body' );
             $table->string( 'plugin' );
             $table->string( 'token', 255 );
             $table->integer( 'foreign_key' )->comment('用于关联各种外键');
