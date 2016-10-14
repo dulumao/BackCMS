@@ -27,12 +27,12 @@ class ArchiveController extends BackendController
         // 构造无限极分类 begin
         $items = $archiveFields->toArray();
 
-        array_unshift($items, '');      // 下方的 foreach 只能处理 下标由1开始的数组(下标与行id对应)
-        unset($items[0]);               // 因此暂时使用这种方式处理
+        array_unshift( $items, '' );      // 下方的 foreach 只能处理 下标由1开始的数组(下标与行id对应)
+        unset( $items[ 0 ] );               // 因此暂时使用这种方式处理
 
-        foreach ($items as $item)
-            $items[$item['pid']]['children'][] = &$items[$item['id']];
-        $archiveFields = isset($items[0]['children']) ? $items[0]['children'] : array();
+        foreach ( $items as $item )
+            $items[ $item[ 'pid' ] ][ 'children' ][] = &$items[ $item[ 'id' ] ];
+        $archiveFields = isset( $items[ 0 ][ 'children' ] ) ? $items[ 0 ][ 'children' ] : [ ];
 
         // 构造无限极分类 end
 
@@ -50,7 +50,7 @@ class ArchiveController extends BackendController
 
         $templates = \App\Models\Template::whereType( 2 )->get();
 
-        $parents = \App\Models\ArchiveField::select(['id', 'pid', 'field', 'name'])->get();
+        $parents = \App\Models\ArchiveField::select( [ 'id', 'pid', 'field', 'name' ] )->get();
 
         return View( 'Backend.Archive.Create' )->with( [
             'templates' => $templates,
@@ -62,18 +62,20 @@ class ArchiveController extends BackendController
     {
         $this->permission();
 
-        $inputs             = $request->except( '_token' );
-        $archiveNames       = $inputs[ 'archiveName' ];
-        $attributeNames     = $inputs[ 'attributeName' ];
-        $attributeTypes     = $inputs[ 'attributeType' ];
-        $attributeLabels    = $inputs[ 'attributeLabel' ];
-        $attributeDefaults  = $inputs[ 'attributeDefault' ];
-        $attributeRequireds = isset( $inputs[ 'attributeRequired' ] ) ? $inputs[ 'attributeRequired' ] : 0;
-        $attributeSelect    = isset( $inputs[ 'attributeSelect' ] ) ? $inputs[ 'attributeSelect' ] : null;
-        $attributeTemplate  = isset( $inputs[ 'attributeTemplate' ] ) ? $inputs[ 'attributeTemplate' ] : null;
-        $listTemplate       = $inputs[ 'list_template' ];
-        $showTemplate       = $inputs[ 'show_template' ];
-        $parentId           = $inputs[ 'parent_id' ];
+        $inputs              = $request->except( '_token' );
+        $archiveNames        = $inputs[ 'archiveName' ];
+        $archiveImages       = $inputs[ 'archiveImage' ];
+        $archiveDescriptions = $inputs[ 'archiveDescription' ];
+        $attributeNames      = $inputs[ 'attributeName' ];
+        $attributeTypes      = $inputs[ 'attributeType' ];
+        $attributeLabels     = $inputs[ 'attributeLabel' ];
+        $attributeDefaults   = $inputs[ 'attributeDefault' ];
+        $attributeRequireds  = isset( $inputs[ 'attributeRequired' ] ) ? $inputs[ 'attributeRequired' ] : 0;
+        $attributeSelect     = isset( $inputs[ 'attributeSelect' ] ) ? $inputs[ 'attributeSelect' ] : null;
+        $attributeTemplate   = isset( $inputs[ 'attributeTemplate' ] ) ? $inputs[ 'attributeTemplate' ] : null;
+        $listTemplate        = $inputs[ 'list_template' ];
+        $showTemplate        = $inputs[ 'show_template' ];
+        $parentId            = $inputs[ 'parent_id' ];
 
         $fields = [ ];
 
@@ -106,10 +108,12 @@ class ArchiveController extends BackendController
         }
 
 
-        $deepth = ($parentId == 0) ? 0 : \App\Models\ArchiveField::whereId($parentId)->value('deepth') + 1;
+        $deepth = ( $parentId == 0 ) ? 0 : \App\Models\ArchiveField::whereId( $parentId )->value( 'deepth' ) + 1;
 
         $archiveField                = new \App\Models\ArchiveField;
         $archiveField->name          = $archiveNames;
+        $archiveField->image         = $archiveImages;
+        $archiveField->description   = $archiveDescriptions;
         $archiveField->field         = json_encode( $fields );
         $archiveField->list_template = $listTemplate;
         $archiveField->show_template = $showTemplate;
