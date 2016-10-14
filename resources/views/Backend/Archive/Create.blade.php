@@ -38,6 +38,22 @@
                             <input class="uk-width-1-1 uk-form-large" type="text" placeholder="分类名称" name="archiveName">
                         </div>
 
+                        <div class="uk-form-row">
+                            <input class="uk-width-1-1 uk-form-large" type="text" placeholder="分类缩略图" name="archiveImage">
+                        </div>
+
+                        <div class="uk-form-row">
+                            <textarea class="uk-width-1-1 uk-form-large" placeholder="分类描述" name="archiveDescription"></textarea>
+                        </div>
+
+                        <div class="uk-form-row">
+                            <textarea class="uk-width-1-1 uk-form-large" placeholder="分类简略描述" name="archiveShortDescription"></textarea>
+                        </div>
+
+                        <div class="uk-form-row">
+                            <input class="uk-width-1-1 uk-form-large" type="text" placeholder="跳转地址" name="archiveForward">
+                        </div>
+
                         <div class="uk-form-row uk-margin">
                             <strong>字段</strong>
                         </div>

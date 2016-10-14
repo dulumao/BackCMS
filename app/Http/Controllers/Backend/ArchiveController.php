@@ -62,20 +62,22 @@ class ArchiveController extends BackendController
     {
         $this->permission();
 
-        $inputs              = $request->except( '_token' );
-        $archiveNames        = $inputs[ 'archiveName' ];
-        $archiveImages       = $inputs[ 'archiveImage' ];
-        $archiveDescriptions = $inputs[ 'archiveDescription' ];
-        $attributeNames      = $inputs[ 'attributeName' ];
-        $attributeTypes      = $inputs[ 'attributeType' ];
-        $attributeLabels     = $inputs[ 'attributeLabel' ];
-        $attributeDefaults   = $inputs[ 'attributeDefault' ];
-        $attributeRequireds  = isset( $inputs[ 'attributeRequired' ] ) ? $inputs[ 'attributeRequired' ] : 0;
-        $attributeSelect     = isset( $inputs[ 'attributeSelect' ] ) ? $inputs[ 'attributeSelect' ] : null;
-        $attributeTemplate   = isset( $inputs[ 'attributeTemplate' ] ) ? $inputs[ 'attributeTemplate' ] : null;
-        $listTemplate        = $inputs[ 'list_template' ];
-        $showTemplate        = $inputs[ 'show_template' ];
-        $parentId            = $inputs[ 'parent_id' ];
+        $inputs                   = $request->except( '_token' );
+        $archiveNames             = $inputs[ 'archiveName' ];
+        $archiveImages            = $inputs[ 'archiveImage' ];
+        $archiveDescriptions      = $inputs[ 'archiveDescription' ];
+        $archiveShortDescriptions = $inputs[ 'short_description' ];
+        $archiveForwards          = $inputs[ 'forward' ];
+        $attributeNames           = $inputs[ 'attributeName' ];
+        $attributeTypes           = $inputs[ 'attributeType' ];
+        $attributeLabels          = $inputs[ 'attributeLabel' ];
+        $attributeDefaults        = $inputs[ 'attributeDefault' ];
+        $attributeRequireds       = isset( $inputs[ 'attributeRequired' ] ) ? $inputs[ 'attributeRequired' ] : 0;
+        $attributeSelect          = isset( $inputs[ 'attributeSelect' ] ) ? $inputs[ 'attributeSelect' ] : null;
+        $attributeTemplate        = isset( $inputs[ 'attributeTemplate' ] ) ? $inputs[ 'attributeTemplate' ] : null;
+        $listTemplate             = $inputs[ 'list_template' ];
+        $showTemplate             = $inputs[ 'show_template' ];
+        $parentId                 = $inputs[ 'parent_id' ];
 
         $fields = [ ];
 
@@ -110,15 +112,17 @@ class ArchiveController extends BackendController
 
         $deepth = ( $parentId == 0 ) ? 0 : \App\Models\ArchiveField::whereId( $parentId )->value( 'deepth' ) + 1;
 
-        $archiveField                = new \App\Models\ArchiveField;
-        $archiveField->name          = $archiveNames;
-        $archiveField->image         = $archiveImages;
-        $archiveField->description   = $archiveDescriptions;
-        $archiveField->field         = json_encode( $fields );
-        $archiveField->list_template = $listTemplate;
-        $archiveField->show_template = $showTemplate;
-        $archiveField->pid           = $parentId;
-        $archiveField->deepth        = $deepth;
+        $archiveField                    = new \App\Models\ArchiveField;
+        $archiveField->name              = $archiveNames;
+        $archiveField->image             = $archiveImages;
+        $archiveField->description       = $archiveDescriptions;
+        $archiveField->short_description = $archiveShortDescriptions;
+        $archiveField->forward           = $archiveForwards;
+        $archiveField->field             = json_encode( $fields );
+        $archiveField->list_template     = $listTemplate;
+        $archiveField->show_template     = $showTemplate;
+        $archiveField->pid               = $parentId;
+        $archiveField->deepth            = $deepth;
 
         if ( $archiveField->save() )
             return Response()->json( [
