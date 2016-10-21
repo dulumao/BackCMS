@@ -240,3 +240,27 @@ function loopArchiveFields( $array, &$li = null )
 
     return $li;
 }
+
+function categoryByPid( $pid = 0, $not = false )
+{
+    if ( is_array( $pid ) ) {
+        $archiveField = new \App\Models\ArchiveField;
+        foreach ( $pid as $where ) {
+            if ( !$not ) {
+                $archiveField = $archiveField->wherePid( $where );
+            } else {
+                $archiveField = $archiveField->where( 'pid', '!=', $where );
+            }
+        }
+
+        $archiveField = $archiveField->get();
+    } else {
+        if ( !$not ) {
+            $archiveField = \App\Models\ArchiveField::where( 'pid', '!=', $pid )->get();
+        } else {
+            $archiveField = \App\Models\ArchiveField::where( 'pid', '!=', $pid )->get();
+        }
+    }
+
+    return $archiveField;
+}
